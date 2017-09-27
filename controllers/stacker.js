@@ -7,16 +7,16 @@ router.use(bodyParser.json());
 
 router.get('/ipaddrs/:vmName', (req, res) => {
   if (req.accepts('application/json')) {
-    Stacker.findOne({ vmName: req.params.vmName }, 'vmName ip', (err, stacker) => {
-      if (err) return res.status(500).send('No record in db.')
+    Stacker.findOne({ vmName: req.params.vmName }, '-_id vmName ip', (err, stacker) => {
+      if (err) return res.status(500).json({'error': err});
+      if (!stacker) return res.status(404).json({'error': 'There is no resource behind the URI.'})
       res.set('Content-Type', 'application/json; charset=utf-8')
          .json(stacker)
     })
   } else {
     res.status(406)
-       .send('Not Acceptable');
+       .json({'error': 'Not Acceptable'});
   }
-
 })
 
 router.post('/ipaddrs', (req, res) => {
@@ -25,7 +25,7 @@ router.post('/ipaddrs', (req, res) => {
     ip: req.body.ip
   },
   (err, stacker) => {
-    if (err) return res.status(500).send(err);
+    if (err) return res.status(500).json({'error': err});
     res.status(200)
        .json(stacker)
   })
