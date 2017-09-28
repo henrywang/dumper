@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+    api:
+        restart: always
+        build: .
+        image: dumper/api:latest
+        ports:
+            - 9000:9000
+        links:
+            - mongodb
+        environment:
+            - NODE_ENV=production
+            - MONGODB_ADDRESS=dumper_mongodb_1
+    mongodb:
+        image: mongo:latest
+        volumes:
+            - /Users/henrywang/tmp/mongodb:/data/db
+        security_opt:
+            - label:disable

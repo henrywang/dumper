@@ -5,7 +5,7 @@ const stacker = require('./controllers/stacker');
 
 const app = express();
 
-app.use(morgan('dev'));
+process.env.NODE_ENV === 'production' || app.use(morgan('dev'));
 app.use('/api/v0/stacker', stacker);
 
 module.exports = app;
