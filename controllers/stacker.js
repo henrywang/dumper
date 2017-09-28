@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Stacker = require('../model/stacker');
+const jsonMaker = require('../helper/jsonMaker');
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -8,26 +9,35 @@ router.use(bodyParser.json());
 router.get('/ipaddrs/:vmName', (req, res) => {
   if (req.accepts('application/json')) {
     Stacker.findOne({ vmName: req.params.vmName }, '-_id vmName ip', (err, stacker) => {
-      if (err) return res.status(500).json({'error': err});
-      if (!stacker) return res.status(404).json({'error': 'There is no resource behind the URI.'})
+      if (err) {
+        return res.status(500)
+                  .json(jsonMaker.failJson([err]));
+      }
+      if (!stacker) {
+        return res.status(404)
+                  .json(jsonMaker.failJson([jsonMaker.ERRORS.code34]));
+      }
+
       res.set('Content-Type', 'application/json; charset=utf-8')
-         .json(stacker)
+         .json(jsonMaker.successJson(stacker));
     })
   } else {
     res.status(406)
-       .json({'error': 'Not Acceptable'});
+       .json(jsonMaker.failJson([jsonMaker.ERRORS.code54]));
   }
 })
 
 router.post('/ipaddrs', (req, res) => {
-  Stacker.create({
-    vmName: req.body.vm_name,
-    ip: req.body.ip
-  },
-  (err, stacker) => {
-    if (err) return res.status(500).json({'error': err});
+  const stacker = new Stacker();
+  stacker.vmName = req.body.vmName;
+  stacker.ip = req.body.ip;
+  stacker.save((err, collection) => {
+    if (err) {
+      return res.status(500)
+                .json(jsonMaker.failJson([err]));
+    }
     res.status(200)
-       .json(stacker)
+       .json(jsonMaker.successJson(collection))
   })
 })
 
