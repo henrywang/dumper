@@ -9,7 +9,7 @@ cache:
 env:
   matrix:
     - COMMAND=eslint
-    - COMMAND=unit-test
+#    - COMMAND=unit-test
 script:
   - make "$COMMAND"
 notifications:
