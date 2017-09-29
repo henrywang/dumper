@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Stacker = require('../model/stacker');
-const jsonMaker = require('../helper/jsonMaker');
+const helperCode = require('../helper/statusCode');
 
 const router = express.Router();
 router.use(bodyParser.json());
@@ -10,22 +10,23 @@ router.get('/ipaddrs/:vmName', (req, res) => {
   if (req.accepts('application/json')) {
     Stacker.findOne({ vmName: req.params.vmName }, '-_id vmName ip', (err, stacker) => {
       if (err) {
-        return res.status(500)
-                  .json(jsonMaker.failJson([err]));
+        return res.status(422)
+          .json(helperCode.make422(err));
       }
       if (!stacker) {
         return res.status(404)
-                  .json(jsonMaker.failJson([jsonMaker.ERRORS.code34]));
+          .json(helperCode.STATUSCODE.code404);
       }
 
-      res.set('Content-Type', 'application/json; charset=utf-8')
-         .json(jsonMaker.successJson(stacker));
-    })
-  } else {
-    res.status(406)
-       .json(jsonMaker.failJson([jsonMaker.ERRORS.code54]));
+      return res.set('Content-Type', 'application/json; charset=utf-8')
+        .status(200)
+        .json(stacker);
+    });
   }
-})
+
+  return res.status(415)
+    .json(helperCode.STATUSCODE.code415);
+});
 
 router.post('/ipaddrs', (req, res) => {
   const stacker = new Stacker();
@@ -33,12 +34,12 @@ router.post('/ipaddrs', (req, res) => {
   stacker.ip = req.body.ip;
   stacker.save((err, collection) => {
     if (err) {
-      return res.status(500)
-                .json(jsonMaker.failJson([err]));
+      return res.status(422)
+        .json(helperCode.make422(err));
     }
-    res.status(200)
-       .json(jsonMaker.successJson(collection))
-  })
-})
+    return res.status(200)
+      .json(collection);
+  });
+});
 
 module.exports = router;

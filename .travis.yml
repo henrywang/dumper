@@ -1,0 +1,18 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+  - "8"
+cache:
+  directories:
+  - node_modules
+env:
+  matrix:
+    - COMMAND=eslint
+    - COMMAND=unit-test
+script:
+  - make "$COMMAND"
+notifications:
+  email:
+    on_failure: change
+    on_success: never
