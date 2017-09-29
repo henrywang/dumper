@@ -6,8 +6,9 @@ const helperCode = require('../helper/statusCode');
 const router = express.Router();
 router.use(bodyParser.json());
 
-router.get('/ipaddrs/:vmName', (req, res) => {
-  if (req.accepts('application/json')) {
+
+router.get('/ipaddrs/:vmName', (req, res) => { /* eslint consistent-return: 0 */
+  if (!req.accepts('application/json')) {
     Stacker.findOne({ vmName: req.params.vmName }, '-_id vmName ip', (err, stacker) => {
       if (err) {
         return res.status(422)
@@ -22,10 +23,10 @@ router.get('/ipaddrs/:vmName', (req, res) => {
         .status(200)
         .json(stacker);
     });
+  } else {
+    return res.status(415)
+      .json(helperCode.STATUSCODE.code415);
   }
-
-  return res.status(415)
-    .json(helperCode.STATUSCODE.code415);
 });
 
 router.post('/ipaddrs', (req, res) => {
