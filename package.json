@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "eslint": "eslint controllers helper model app.js db.js server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
+    "test:watch": "mocha --watch",
     "debug": "nodemon ./server.js",
     "start": "node ./server.js"
   },
@@ -18,21 +19,35 @@
     "morgan": "^1.8.2"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.7.2",
     "eslint-config-airbnb": "^15.1.0",
     "eslint-config-airbnb-base": "^11.3.1",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jest": "^21.2.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.4.0",
-    "nodemon": "^1.11.0"
+    "mocha": "^3.5.3",
+    "nodemon": "^1.11.0",
+    "sinon": "^4.0.0",
+    "sinon-mongoose": "^2.0.2"
   },
   "eslintConfig": {
+    "plugins": [
+      "jest"
+    ],
     "extends": "airbnb",
     "rules": {
       "no-console": 0,
-      "no-unused-expressions": [2, {
-        "allowShortCircuit": true
-      }]
-  }
+      "no-unused-expressions": [
+        2,
+        {
+          "allowShortCircuit": true
+        }
+      ]
+    },
+    "env": {
+      "jest/globals": true
+    }
   }
 }

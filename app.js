@@ -1,7 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const stacker = require('./controllers/stacker');
+const stackerRouter = require('./routers/stackr.router');
 
 // connect to mongodb
 const mongoUrl = process.env.MONGODB_ADDRESS || 'localhost';
@@ -12,6 +12,6 @@ mongoose.connect(`mongodb://${mongoUrl}:${mongoPort}/${mongoName}`);
 const app = express();
 
 process.env.NODE_ENV === 'production' || app.use(morgan('dev'));
-app.use('/api/v0/stacker', stacker);
+app.use('/api/v0/stacker', stackerRouter);
 
 module.exports = app;
