@@ -3,7 +3,7 @@ const helperCode = require('../helper/statusCode');
 
 const stackerController = {
   getIp: (req, res) => { /* eslint consistent-return: 0 */
-    if (!req.accepts('application/json')) {
+    if (req.accepts('application/json')) {
       StackerModel.findOne({ vmName: req.params.vmName }, '-_id vmName ip', (err, stacker) => {
         if (err) {
           return res.status(422)
