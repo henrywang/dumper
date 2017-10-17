@@ -15,6 +15,6 @@ services:
     mongodb:
         image: mongo:latest
         volumes:
-            - /Users/henrywang/tmp/mongodb:/data/db
+            - `pwd`:/data/db
         security_opt:
             - label:disable
