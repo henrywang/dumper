@@ -11,4 +11,4 @@ eslint:
 unit-test:
 	npm run test
 
-.PHONY: sandbox bdcs-api-server clean tests hlint
+.PHONY: dumper eslint unit-test
