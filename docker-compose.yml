@@ -6,7 +6,7 @@ services:
         build: .
         image: dumper/api:latest
         ports:
-            - 9000:9000
+            - "9000:9000"
         links:
             - mongodb
         environment:
@@ -14,8 +14,11 @@ services:
             - MONGODB_ADDRESS=dumper_mongodb_1
     mongodb:
         image: mongo:latest
+        expose:
+            - 27017
         volumes:
             - mongodb-volume:/data/db
+        entrypoint: mongod
         security_opt:
             - label:disable
 volumes:
