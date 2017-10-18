@@ -41,7 +41,8 @@ chpasswd:
     ${vm_user}:${vm_pass}
   expire: False
 runcmd:
-  - curl --connect-timeout 2 --max-time 3 -i -X POST -H 'Content-Type: application/json' -d '{"vmName": "Atomic-${version}-${hypervisor}-${firmware}-${build_num}", "ip": `ip route get 8.8.8.8 | head -1 | cut -d' ' -f7`}' ${api_url} >${log_file}
+  - curl --connect-timeout 2 --max-time 3 -i -X POST -H 'Content-Type: application/json' -d '{"vmName": "Atomic-${version}-${hypervisor}-${firmware}-${build_num}", "ip": "'"VMIPCMD"'"}' ${api_url} >${log_file}
 EOF
 
+sed -i $user_data -e 's/VMIPCMD/$(ip route get 8.8.8.8 | head -1 | cut -d\x27\ \x27 -f7)/'
 genisoimage -input-charset utf-8 -output $iso_image -volid cidata -joliet -rock $user_data $meta_data
